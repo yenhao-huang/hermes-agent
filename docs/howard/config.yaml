@@ -1,0 +1,47 @@
+# Hermes Agent Docker terminal backend example for native Windows.
+#
+# Before using this file, replace "your-user" with your Windows account name.
+# The host workspace is mounted at /workspace inside the Linux container, and
+# cwd explicitly selects that container path so Hermes does not inherit a
+# Windows host path such as C:\Users\your-user.
+
+terminal:
+  backend: docker
+  cwd: /workspace
+
+  docker_image: "nikolaik/python-nodejs:python3.11-nodejs20"
+
+  # The workspace is mounted explicitly below, so do not also mount the
+  # directory from which Hermes was launched.
+  docker_mount_cwd_to_workspace: false
+  docker_run_as_host_user: false
+
+  # Forward only credentials that container commands actually need.
+  docker_forward_env:
+    - "GITHUB_TOKEN"
+
+  docker_env:
+    DEBUG: "1"
+    PYTHONUNBUFFERED: "1"
+
+  # Docker Desktop accepts forward-slash Windows paths. Keep the entire mount
+  # expression quoted because the Windows drive letter and Docker separator
+  # both contain colons.
+  docker_volumes:
+    - "C:/Users/your-user/Desktop/workspace:/workspace"
+
+  docker_extra_args: []
+  docker_network: true
+
+  # Resource limits.
+  container_cpu: 1
+  container_memory: 5120
+  container_disk: 40960
+
+  # Reuse one persistent terminal container across Hermes sessions/processes.
+  container_persistent: true
+  docker_persist_across_processes: true
+  docker_orphan_reaper: true
+
+  timeout: 180
+  lifetime_seconds: 300
