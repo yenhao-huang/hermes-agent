@@ -1,0 +1,19 @@
+model:
+  default: /workspace/llm_model
+  provider: local-llm
+  base_url: http://192.168.8.144:5335/v1
+
+providers:
+  local-llm:
+    name: gemma4
+    base_url: http://192.168.8.144:5335/v1
+    model: /workspace/llm_model
+
+    extra_body:
+      chat_template_kwargs:
+        enable_thinking: true
+
+    models:
+      /workspace/llm_model: {}
+
+    discover_models: true
